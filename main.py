@@ -1,9 +1,10 @@
-from Contact import Contact
+from App import *
 
-print("Hello World!")
-a = 1
-b = a
-print(b)
-
-Alex = Contact('Alex1', 42)
-print(Alex)
+if __name__ == '__main__':
+    root = tk.Tk()
+    app = App(root)
+    app.pack(expand=tk.YES, fill=tk.BOTH)
+    root.title('ConatctsApp')
+    root.geometry('780x420+500+200')
+    root.resizable(False, False)
+    root.mainloop()
