@@ -1,8 +1,9 @@
 import tkinter as tk
-
+from AboutWindow import AboutWindow
 
 class App(tk.Frame):
     def __init__(self, root):
+        self.root =root
         super().__init__(root)
 
         self.add_menu_bar(root)
@@ -21,7 +22,7 @@ class App(tk.Frame):
         editmenu.add_command(label="Remove Contact")
 
         helpmenu = tk.Menu(mainmenu, tearoff=0)
-        helpmenu.add_command(label="About")
+        helpmenu.add_command(label="About",command=self.about)
 
         mainmenu.add_cascade(label="File", menu=filemenu)
         mainmenu.add_cascade(label="Edit", menu=editmenu)
@@ -48,18 +49,18 @@ class App(tk.Frame):
         self.list_box.pack(side=tk.TOP, padx=1, pady=1)
 
         left_frame_width_buttons=tk.Frame(root)
-        left_frame_width_buttons.place(relx=0.01,rely=0.94,width=75,height=25)
+        left_frame_width_buttons.place(relx=0.01,rely=0.925,width=75,height=25)
 
         self.add_images = tk.PhotoImage(file="Images/Add_img.png")
-        add_button = tk.Button(left_frame_width_buttons, image=self.add_images, bd=0,command=self.print)
+        add_button = tk.Button(left_frame_width_buttons, image=self.add_images, bd=0,command=print('hello'))
         add_button.place(x=0, y=0, width=20, height=20)
 
         self.edit_images = tk.PhotoImage(file="Images/Edit_img.png")
-        add_button = tk.Button(left_frame_width_buttons, image=self.edit_images, bd=0, command=self.print)
+        add_button = tk.Button(left_frame_width_buttons, image=self.edit_images, bd=0, command=print('hello'))
         add_button.place(x=25, y=0, width=20, height=20)
 
         self.del_images = tk.PhotoImage(file="Images/Delet_img.png")
-        add_button = tk.Button(left_frame_width_buttons, image=self.del_images, bd=0, command=self.print)
+        add_button = tk.Button(left_frame_width_buttons, image=self.del_images, bd=0, command=print('hello'))
         add_button.place(x=50, y=0, width=20, height=20)
 
 
@@ -94,5 +95,5 @@ class App(tk.Frame):
             # выводим текст выделенного элемента в консоль
             print(text)
 
-    def print(self):
-        print('hello')
+    def about(self):
+        AboutWindow(self.root)
