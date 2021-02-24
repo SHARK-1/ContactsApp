@@ -1,9 +1,11 @@
 import tkinter as tk
 from AboutWindow import AboutWindow
+from AddEditWindow import AddEditWindow
+
 
 class App(tk.Frame):
     def __init__(self, root):
-        self.root =root
+        self.root = root
         super().__init__(root)
 
         self.add_menu_bar(root)
@@ -14,15 +16,15 @@ class App(tk.Frame):
         root.config(menu=mainmenu)
 
         filemenu = tk.Menu(mainmenu, tearoff=0)
-        filemenu.add_command(label="Exit")
+        filemenu.add_command(label="Exit",command=self.destroy_main_window)
 
         editmenu = tk.Menu(mainmenu, tearoff=0)
-        editmenu.add_command(label="Add Contact")
+        editmenu.add_command(label="Add Contact",command=self.open_add_window)
         editmenu.add_command(label="Edit Contact")
         editmenu.add_command(label="Remove Contact")
 
         helpmenu = tk.Menu(mainmenu, tearoff=0)
-        helpmenu.add_command(label="About",command=self.about)
+        helpmenu.add_command(label="About", command=self.open_about_window)
 
         mainmenu.add_cascade(label="File", menu=filemenu)
         mainmenu.add_cascade(label="Edit", menu=editmenu)
@@ -48,11 +50,11 @@ class App(tk.Frame):
         self.list_box = tk.Listbox(left_frame, width=39, height=22)
         self.list_box.pack(side=tk.TOP, padx=1, pady=1)
 
-        left_frame_width_buttons=tk.Frame(root)
-        left_frame_width_buttons.place(relx=0.01,rely=0.925,width=75,height=25)
+        left_frame_width_buttons = tk.Frame(root)
+        left_frame_width_buttons.place(relx=0.01, rely=0.925, width=75, height=25)
 
         self.add_images = tk.PhotoImage(file="Images/Add_img.png")
-        add_button = tk.Button(left_frame_width_buttons, image=self.add_images, bd=0,command=print('hello'))
+        add_button = tk.Button(left_frame_width_buttons, image=self.add_images, bd=0, command=print('hello'))
         add_button.place(x=0, y=0, width=20, height=20)
 
         self.edit_images = tk.PhotoImage(file="Images/Edit_img.png")
@@ -63,11 +65,10 @@ class App(tk.Frame):
         add_button = tk.Button(left_frame_width_buttons, image=self.del_images, bd=0, command=print('hello'))
         add_button.place(x=50, y=0, width=20, height=20)
 
-
         # Лейблы для описания полей вsdjlf
         self.__info_labels = []
-        label_data = ['Surname:', 'Name:', 'Birthday:', 'Phone:', 'E-Mail:', 'vk.com:']
-        for i, value in enumerate(label_data):
+        self.label_data = ['Surname:', 'Name:', 'Birthday:', 'Phone:', 'E-Mail:', 'vk.com:']
+        for i, value in enumerate(self.label_data):
             frame = tk.Frame(right_left_frame)
             frame.place(x=0, y=i * 25, relwidth=1, height=30)
             label = tk.Label(frame, text=value)
@@ -95,5 +96,11 @@ class App(tk.Frame):
             # выводим текст выделенного элемента в консоль
             print(text)
 
-    def about(self):
+    def open_about_window(self):
         AboutWindow(self.root)
+
+    def open_add_window(self):
+        AddEditWindow(self.root, self.label_data)
+
+    def destroy_main_window(self):
+        self.root.destroy()
