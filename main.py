@@ -9,4 +9,3 @@ if __name__ == '__main__':
     root.resizable(False, False)
     # root.iconbitmap('Images/Icon.ico')
     root.mainloop()
-    print('12354')
