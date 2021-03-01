@@ -67,7 +67,7 @@ class App(tk.Frame):
 
         # Лейблы для описания полей вsdjlf
         self.__info_labels = []
-        self.label_data = ['Surname:', 'Name:', 'Birthday:', 'Phone:', 'E-Mail:', 'vk.com:']
+        self.label_data = ['Name:', 'Surname:', 'Birthday:', 'Phone:', 'E-Mail:', 'vk.com:']
         for i, value in enumerate(self.label_data):
             frame = tk.Frame(right_left_frame)
             frame.place(x=0, y=i * 25, relwidth=1, height=30)
