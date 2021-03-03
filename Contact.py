@@ -14,7 +14,8 @@ class Contact:
     __social_network - социальные сети
     '''
 
-    def __init__(self, number='', firs_name='', last_name='', age=0, date_of_birth=False, social_network=''):
+    def __init__(self, number='', firs_name='', last_name='', age=0, date_of_birth=[1900, 1, 1], email='',
+                 social_network=''):
         self.__phone = PhoneNumber(number)
         self.__first_name = ''
         if firs_name != '':
@@ -26,7 +27,7 @@ class Contact:
         if age != 0:
             self.set_age(age)
         self.__date_of_birth = datetime.date(1900, 1, 1)
-        if date_of_birth != False:
+        if date_of_birth != [1900, 1, 1]:
             self.set_date_of_birth(date_of_birth)
         self.__social_network = ''
         if social_network != '':
@@ -104,6 +105,21 @@ class Contact:
     def del_social_network(self):
         self.__social_network = ''
 
+    def get_email(self):
+        return self.__email
+
+    def set_email(self, email):
+        email = str(email)
+        for char in email:
+            if char == " ":
+                raise ValueError('There must be no spaces in the e-mail')
+        if len(email) > 50 or len(email) == 0:
+            raise ValueError('Incorrect length')
+        self.__email = email
+
+    def del_email(self):
+        self.__email = ''
+
     def __str__(self):
         return self.__first_name
 
@@ -112,6 +128,7 @@ class Contact:
     last_name = property(get_last_name, set_last_name, del_last_name, 'Last name')
     date_of_birth = property(get_date_of_birth, set_date_of_birth, del_date_of_birth, 'Date of birthday')
     social_network = property(get_social_network, set_social_network, del_social_network, 'Social network')
+    email = property(get_email, set_email, del_email, 'E-Mail')
 
 
 if __name__ == '__main__':

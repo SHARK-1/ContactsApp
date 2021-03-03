@@ -1,6 +1,8 @@
 import tkinter as tk
+from Project import Project
 from AboutWindow import AboutWindow
 from AddEditWindow import AddEditWindow
+from ProjectManager import ProjectManager
 
 
 class App(tk.Frame):
@@ -10,18 +12,21 @@ class App(tk.Frame):
 
         self.add_menu_bar(root)
         self.add_components(root)
+        self.__project = Project()
 
     def add_menu_bar(self, root):
         mainmenu = tk.Menu(root)
         root.config(menu=mainmenu)
 
         filemenu = tk.Menu(mainmenu, tearoff=0)
-        filemenu.add_command(label="Exit",command=self.destroy_main_window)
+        filemenu.add_command(label="Exit", command=self.destroy_main_window)
 
         editmenu = tk.Menu(mainmenu, tearoff=0)
-        editmenu.add_command(label="Add Contact",command=self.open_add_window)
+        editmenu.add_command(label="Add Contact", command=self.open_add_window)
         editmenu.add_command(label="Edit Contact")
         editmenu.add_command(label="Remove Contact")
+        editmenu.add_command(label="Save", command=self.save_contacts)
+        editmenu.add_command(label="Load", command=self.load_contacts)
 
         helpmenu = tk.Menu(mainmenu, tearoff=0)
         helpmenu.add_command(label="About", command=self.open_about_window)
@@ -54,7 +59,7 @@ class App(tk.Frame):
         left_frame_width_buttons.place(relx=0.01, rely=0.925, width=75, height=25)
 
         self.add_images = tk.PhotoImage(file="Images/Add_img.png")
-        add_button = tk.Button(left_frame_width_buttons, image=self.add_images, bd=0, command=print('hello'))
+        add_button = tk.Button(left_frame_width_buttons, image=self.add_images, bd=0, command=self.open_add_window)
         add_button.place(x=0, y=0, width=20, height=20)
 
         self.edit_images = tk.PhotoImage(file="Images/Edit_img.png")
@@ -86,7 +91,7 @@ class App(tk.Frame):
         self.entry = tk.Entry(left_top_frame, width=33, state=tk.NORMAL)
         self.entry.pack(side=tk.LEFT, padx=1, pady=1)
 
-        # self.list_box.bind('<<ListboxSelect>>', self.on_change)
+        self.list_box.bind('<<ListboxSelect>>', self.on_change)
 
     def on_change(self, event):
         widget = event.widget  # виджет, с которым произошло событие (в данном случае listbox)
@@ -94,13 +99,32 @@ class App(tk.Frame):
         if selection:  # если что-то выделено
             text = widget.get(selection[0])  # Текст в выбранной строке
             # выводим текст выделенного элемента в консоль
-            print(text)
+            self.__info_labels[0].config(
+                text=self.__project.contacts[selection[0]].first_name)
+            self.__info_labels[1].config(
+                text=self.__project.contacts[selection[0]].last_name)
 
     def open_about_window(self):
         AboutWindow(self.root)
 
     def open_add_window(self):
-        AddEditWindow(self.root, self.label_data)
+        AddEditWindow(self, self.label_data)
+
+    def add_new_contact(self, new_contact):
+        self.__project.contacts.append(new_contact)
+        self.update_list_box()
 
     def destroy_main_window(self):
         self.root.destroy()
+
+    def update_list_box(self):
+        self.list_box.delete(0, tk.END)
+        for contact in self.__project.contacts:
+            self.list_box.insert(tk.END, contact.last_name)
+
+    def save_contacts(self):
+        ProjectManager.save(self.__project)
+
+    def load_contacts(self):
+        self.__project = ProjectManager.load()
+        self.update_list_box()
