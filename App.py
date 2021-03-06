@@ -63,7 +63,7 @@ class App(tk.Frame):
         add_button.place(x=0, y=0, width=20, height=20)
 
         self.edit_images = tk.PhotoImage(file="Images/Edit_img.png")
-        add_button = tk.Button(left_frame_width_buttons, image=self.edit_images, bd=0, command=print('hello'))
+        add_button = tk.Button(left_frame_width_buttons, image=self.edit_images, bd=0, command=self.open_edit_window)
         add_button.place(x=25, y=0, width=20, height=20)
 
         self.del_images = tk.PhotoImage(file="Images/Delet_img.png")
@@ -95,14 +95,14 @@ class App(tk.Frame):
 
     def on_change(self, event):
         widget = event.widget  # виджет, с которым произошло событие (в данном случае listbox)
-        selection = widget.curselection()  # получаем список индексов выделенных элементов
-        if selection:  # если что-то выделено
-            text = widget.get(selection[0])  # Текст в выбранной строке
+        self.__selection = widget.curselection()  # получаем список индексов выделенных элементов
+        if self.__selection:  # если что-то выделено
             # выводим текст выделенного элемента в консоль
+            contact=self.__project.get_contact(self.__selection[0])
             self.__info_labels[0].config(
-                text=self.__project.contacts[selection[0]].first_name)
+                text=contact.first_name)
             self.__info_labels[1].config(
-                text=self.__project.contacts[selection[0]].last_name)
+                text=contact.last_name)
 
     def open_about_window(self):
         AboutWindow(self.root)
@@ -110,8 +110,11 @@ class App(tk.Frame):
     def open_add_window(self):
         AddEditWindow(self, self.label_data)
 
+    def open_edit_window(self):
+        AddEditWindow(self, self.label_data,mode='edit',contact=self.__project.get_contact(self.__selection[0]))
+
     def add_new_contact(self, new_contact):
-        self.__project.contacts.append(new_contact)
+        self.__project.add_contact(new_contact)
         self.update_list_box()
 
     def destroy_main_window(self):
@@ -119,7 +122,7 @@ class App(tk.Frame):
 
     def update_list_box(self):
         self.list_box.delete(0, tk.END)
-        for contact in self.__project.contacts:
+        for contact in self.__project.get_all_contacts():
             self.list_box.insert(tk.END, contact.last_name)
 
     def save_contacts(self):

@@ -4,14 +4,7 @@ import datetime
 
 class Contact:
     '''
-    В данном классе храниться информацие о человеке.
-    Переменные:
-    __phone - информация о номере телефона
-    __first_name - имя
-    __last_name - фамилия
-    __age - возраст
-    __date_of_birth - дата рождения
-    __social_network - социальные сети
+    Contains contact details
     '''
 
     def __init__(self, number='', firs_name='', last_name='', age=0, date_of_birth=[1900, 1, 1], email='',
@@ -32,6 +25,9 @@ class Contact:
         self.__social_network = ''
         if social_network != '':
             self.set_social_network(social_network)
+        self.__email = ''
+        if email != '':
+            self.set_email(email)
 
     def get_phone(self):
         return self.__phone.number
@@ -46,12 +42,7 @@ class Contact:
         return self.__first_name
 
     def set_first_name(self, first_name):
-        first_name = str(first_name)
-        for char in first_name:
-            if char == " ":
-                raise ValueError('There must be no spaces in the first name')
-        if len(first_name) > 50 or len(first_name) == 0:
-            raise ValueError('Incorrect length')
+        self.__length_validator(first_name, 'first name')
         first_name = first_name.lower()
         first_name = first_name.title()
         self.__first_name = first_name
@@ -63,12 +54,7 @@ class Contact:
         return self.__last_name
 
     def set_last_name(self, last_name):
-        last_name = str(last_name)
-        for char in last_name:
-            if char == " ":
-                raise ValueError('There must be no spaces in the last name')
-        if len(last_name) > 50 or len(last_name) == 0:
-            raise ValueError('Incorrect length')
+        self.__length_validator(last_name, 'last name')
         last_name = last_name.lower()
         last_name = last_name.title()
         self.__last_name = last_name
@@ -94,12 +80,7 @@ class Contact:
         return self.__social_network
 
     def set_social_network(self, social_network):
-        social_network = str(social_network)
-        for char in social_network:
-            if char == " ":
-                raise ValueError('There must be no spaces in the last name')
-        if len(social_network) > 50 or len(social_network) == 0:
-            raise ValueError('Incorrect length')
+        self.__length_validator(social_network, 'social network')
         self.__social_network = social_network
 
     def del_social_network(self):
@@ -109,12 +90,7 @@ class Contact:
         return self.__email
 
     def set_email(self, email):
-        email = str(email)
-        for char in email:
-            if char == " ":
-                raise ValueError('There must be no spaces in the e-mail')
-        if len(email) > 50 or len(email) == 0:
-            raise ValueError('Incorrect length')
+        self.__length_validator(email, 'email')
         self.__email = email
 
     def del_email(self):
@@ -123,18 +99,23 @@ class Contact:
     def __str__(self):
         return self.__first_name
 
+    def __length_validator(self, value, name):
+        '''
+        Checks the correctness of a string variable
+        for spaces and length
+        :param name: field name
+        :return:
+        '''
+        value = str(value)
+        for char in value:
+            if char == " ":
+                raise ValueError(f'There must be no spaces in the {name}')
+        if len(value) > 50 or len(value) == 0:
+            raise ValueError('Incorrect length')
+
     phone = property(get_phone, set_phone, del_phone, 'Telephone number')
     first_name = property(get_first_name, set_first_name, del_first_name, 'First name')
     last_name = property(get_last_name, set_last_name, del_last_name, 'Last name')
     date_of_birth = property(get_date_of_birth, set_date_of_birth, del_date_of_birth, 'Date of birthday')
     social_network = property(get_social_network, set_social_network, del_social_network, 'Social network')
     email = property(get_email, set_email, del_email, 'E-Mail')
-
-
-if __name__ == '__main__':
-    a = Contact('9138510387')
-    a.date_of_birth = (2020, 12, 1)
-    print(a.date_of_birth)
-    # a.date_of_birth = [1998, 125, 3]
-    # a.phone = 1234567890
-    print(a.phone)

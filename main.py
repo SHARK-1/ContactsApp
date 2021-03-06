@@ -7,6 +7,5 @@ if __name__ == '__main__':
     root.title('ConatctsApp')
     root.geometry('780x420+500+200')
     root.resizable(False, False)
-    # root.iconbitmap('Images/Icon.ico')
+    root.iconbitmap('Images/Icon.ico')
     root.mainloop()
-    print('123')

@@ -26,7 +26,3 @@ class PhoneNumber:
         self.__number = '+70000000000'
 
     number = property(get_number, set_number, del_number, 'Telephone Number')
-
-if __name__== '__main__':
-    alex=PhoneNumber('1234567890')
-    print(jsonpickle.encode(alex))
