@@ -21,7 +21,7 @@ class Project:
 
     def del_contact_by_index(self, index):
         self.index_validator(index)
-        self.__contacts.remove(index)
+        self.__contacts.pop(index)
 
     def get_contact(self,index):
         self.index_validator(index)

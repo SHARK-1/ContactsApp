@@ -7,7 +7,7 @@ CURRENT_BG = '#ffffff'
 
 class AddEditWindow(tk.Toplevel):
 
-    def __init__(self, parent, fields, mode='add', contact=Contact()):
+    def __init__(self, parent, mode='add', contact=None):
         '''
         :param fields: names of fields(first name, last name ...)
         :param mode: 'add' or 'edit'
@@ -16,13 +16,18 @@ class AddEditWindow(tk.Toplevel):
         self.__parrent = parent
         super().__init__(parent)
         self.init_child()
-        self.fields = fields
-        self.__contact = contact
-        if mode == 'add' or mode == 'edit':
+        self.__fields = ['Name:', 'Surname:', 'Birthday:', 'Phone:', 'E-Mail:', 'vk.com:']
+        if contact != None:
+            self.__contact = contact
+        else:
+            self.__contact = Contact()
+
+        self.__mode = mode
+
+        if self.__mode == 'add' or self.__mode == 'edit':
             self.init_components(mode)
         else:
             raise ValueError('Param mode must be "add" or "edit"')
-
 
     def init_child(self):
         self.title('Add/Edit Contact')
@@ -34,11 +39,13 @@ class AddEditWindow(tk.Toplevel):
     def init_components(self, mode):
         self.__entrys = {}
         self.__string_vars = {}
+
         if mode == 'add':
             init_bg = ERR_BG
         else:
             init_bg = CURRENT_BG
-        for i, value in enumerate(self.fields):
+
+        for i, value in enumerate(self.__fields):
             frame = tk.Frame(self)
             frame.place(x=0, y=i * 25 + 10, width=70, height=30)
             label = tk.Label(frame, text=value)
@@ -69,6 +76,7 @@ class AddEditWindow(tk.Toplevel):
 
             self.__entrys[value].pack(side=tk.LEFT)
             self.__string_vars[value].trace("w", lambda a, b, c, x=value: self.check_correct_value(x))
+
         self.ok_button = tk.Button(self, text='ОК', command=self.ok_button)
         self.ok_button.place(relx=0.6, rely=0.85, width=80)
         self.cancel_button = tk.Button(self, text='Cansel', command=self.destroy)
@@ -124,5 +132,8 @@ class AddEditWindow(tk.Toplevel):
                 self.__entrys[args[0]].config(bg=CURRENT_BG)
 
     def ok_button(self):
-        self.__parrent.add_new_contact(self.__contact)
+        if self.__mode == 'add':
+            self.__parrent.add_new_contact(self.__contact)
+        else:
+            self.__parrent.change_contact(self.__contact)
         self.destroy()

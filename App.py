@@ -13,6 +13,7 @@ class App(tk.Frame):
         self.add_menu_bar(root)
         self.add_components(root)
         self.__project = Project()
+        self.__current_listbox_item = None
 
     def add_menu_bar(self, root):
         mainmenu = tk.Menu(root)
@@ -45,7 +46,7 @@ class App(tk.Frame):
 
         left_top_frame = tk.Frame(left_frame, width=50)
         left_top_frame.pack(side=tk.TOP, fill=tk.X)
-        #
+
         right_left_frame = tk.Frame(right_frame, width=75)
         right_left_frame.place(relx=0, rely=0, relwidth=0.1374, relheight=1)
 
@@ -67,7 +68,7 @@ class App(tk.Frame):
         add_button.place(x=25, y=0, width=20, height=20)
 
         self.del_images = tk.PhotoImage(file="Images/Delet_img.png")
-        add_button = tk.Button(left_frame_width_buttons, image=self.del_images, bd=0, command=print('hello'))
+        add_button = tk.Button(left_frame_width_buttons, image=self.del_images, bd=0, command=self.del_contact)
         add_button.place(x=50, y=0, width=20, height=20)
 
         # Лейблы для описания полей вsdjlf
@@ -91,43 +92,95 @@ class App(tk.Frame):
         self.entry = tk.Entry(left_top_frame, width=33, state=tk.NORMAL)
         self.entry.pack(side=tk.LEFT, padx=1, pady=1)
 
-        self.list_box.bind('<<ListboxSelect>>', self.on_change)
+        self.list_box.bind('<<ListboxSelect>>', self.list_box_select)
 
-    def on_change(self, event):
-        widget = event.widget  # виджет, с которым произошло событие (в данном случае listbox)
-        self.__selection = widget.curselection()  # получаем список индексов выделенных элементов
-        if self.__selection:  # если что-то выделено
-            # выводим текст выделенного элемента в консоль
-            contact=self.__project.get_contact(self.__selection[0])
-            self.__info_labels[0].config(
-                text=contact.first_name)
-            self.__info_labels[1].config(
-                text=contact.last_name)
+    def list_box_select(self, event):
+        widget = event.widget
+        self.__selection = widget.curselection()
+        if self.__selection:
+            self.__current_listbox_item = self.__selection[0]
+            contact = self.__project.get_contact(self.__current_listbox_item)
+            self.fill_fields(contact)
 
     def open_about_window(self):
         AboutWindow(self.root)
 
     def open_add_window(self):
-        AddEditWindow(self, self.label_data)
+        AddEditWindow(self)
 
     def open_edit_window(self):
-        AddEditWindow(self, self.label_data,mode='edit',contact=self.__project.get_contact(self.__selection[0]))
+        AddEditWindow(self, mode='edit', contact=self.__project.get_contact(self.__selection[0]))
+
+    def change_contact(self, new_contact):
+        self.__project.del_contact_by_index(self.__current_listbox_item)
+        self.add_new_contact(new_contact)
 
     def add_new_contact(self, new_contact):
         self.__project.add_contact(new_contact)
+        if self.__current_listbox_item == None:
+            self.__current_listbox_item = 0
         self.update_list_box()
 
-    def destroy_main_window(self):
-        self.root.destroy()
+    def del_contact(self):
+        if self.__current_listbox_item == None:
+            return None
+        self.__project.del_contact_by_index(self.__current_listbox_item)
+        if len(self.__project.get_all_contacts()) == 0:
+            self.__current_listbox_item = None
+            self.update_list_box()
+        else:
+            self.__current_listbox_item = 0
+            self.update_list_box()
 
     def update_list_box(self):
         self.list_box.delete(0, tk.END)
+        i = 0
         for contact in self.__project.get_all_contacts():
+            i += 1
             self.list_box.insert(tk.END, contact.last_name)
+        if i == 0:
+            self.fill_fields()
+        else:
+            self.fill_fields(self.__project.get_contact(self.__current_listbox_item))
 
     def save_contacts(self):
         ProjectManager.save(self.__project)
 
     def load_contacts(self):
         self.__project = ProjectManager.load()
+        if len(self.__project.get_all_contacts()) == 0:
+            self.__current_listbox_item = None
+        else:
+            self.__current_listbox_item = 0
         self.update_list_box()
+
+    def fill_fields(self, contact=None):
+        if contact != None:
+            self.__info_labels[0].config(
+                text=contact.first_name)
+            self.__info_labels[1].config(
+                text=contact.last_name)
+            self.__info_labels[2].config(
+                text=contact.date_of_birth)
+            self.__info_labels[3].config(
+                text=contact.phone)
+            self.__info_labels[4].config(
+                text=contact.email)
+            self.__info_labels[5].config(
+                text=contact.social_network)
+        else:
+            self.__info_labels[0].config(
+                text='')
+            self.__info_labels[1].config(
+                text='')
+            self.__info_labels[2].config(
+                text='')
+            self.__info_labels[3].config(
+                text='')
+            self.__info_labels[4].config(
+                text='')
+            self.__info_labels[5].config(
+                text='')
+
+    def destroy_main_window(self):
+        self.root.destroy()
