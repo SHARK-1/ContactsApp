@@ -7,8 +7,14 @@ class Contact:
     Contains contact details
     '''
 
-    def __init__(self, number='', firs_name='', last_name='', age=0, date_of_birth=[1900, 1, 1], email='',
+    def __init__(self, number='', firs_name='', last_name='', date_of_birth=[1900, 1, 1], email='',
                  social_network=''):
+        '''
+        Contact object initialization
+        :param number: Accepts a number or a string from a number that is 10 characters long, without country code
+        :param firs_name, last_name, email, social_network:string from 0 to 50 characters long without spaces
+        :param date_of_birth:
+        '''
         self.__phone = PhoneNumber(number)
         self.__first_name = ''
         if firs_name != '':
@@ -27,42 +33,70 @@ class Contact:
             self.set_email(email)
 
     def get_phone(self):
+        '''
+        :return: Phone number
+        '''
         return self.__phone.number
 
     def set_phone(self, number):
         '''
-        :param number: Length of number - 10
+        :param number: Accepts a number or a string from a number that is 10 characters long, without country code
         '''
         self.__phone.number = number
 
     def del_phone(self):
-        self.__phone.number = '0000000000'
+        '''
+        Sets a default value for a phone number(+70000000000)
+        '''
+        del self.__phone
+        # self.__phone.number = '0000000000'
 
     def get_first_name(self):
+        '''
+        :return: Last Name
+        '''
         return self.__first_name
 
     def set_first_name(self, first_name):
+        '''
+        :param first_name: string from 0 to 50 characters long without spaces
+        '''
         self.__length_validator(first_name, 'first name')
         first_name = first_name.lower()
         first_name = first_name.title()
         self.__first_name = first_name
 
     def del_first_name(self):
+        '''
+        Sets the default value for the field('')
+        '''
         self.__first_name = ''
 
     def get_last_name(self):
+        '''
+        :return: Last name
+        '''
         return self.__last_name
 
     def set_last_name(self, last_name):
+        '''
+        :param last_name: string from 0 to 50 characters long without spaces
+        '''
         self.__length_validator(last_name, 'last name')
         last_name = last_name.lower()
         last_name = last_name.title()
         self.__last_name = last_name
 
     def del_last_name(self):
+        '''
+        Sets the default value for the field('')
+        '''
         self.__last_name = ''
 
     def get_date_of_birth(self):
+        '''
+        :return: Date of birth. Format: '1900-01-01'
+        '''
         return self.__date_of_birth
 
     def set_date_of_birth(self, date):
@@ -77,26 +111,47 @@ class Contact:
         self.__date_of_birth = date
 
     def del_date_of_birth(self):
+        '''
+        Sets the default value for the field('1900-01-01')
+        '''
         self.__date_of_birth = datetime.date(1900, 1, 1)
 
     def get_social_network(self):
+        '''
+        :return: VK ID
+        '''
         return self.__social_network
 
     def set_social_network(self, social_network):
+        '''
+        :param social_network: string from 0 to 50 characters long without spaces
+        '''
         self.__length_validator(social_network, 'social network')
         self.__social_network = social_network
 
     def del_social_network(self):
+        '''
+        Sets the default value for the field('')
+        '''
         self.__social_network = ''
 
     def get_email(self):
+        '''
+        :return: E-mail address
+        '''
         return self.__email
 
     def set_email(self, email):
+        '''
+        :param email: string from 0 to 50 characters long without spaces
+        '''
         self.__length_validator(email, 'email')
         self.__email = email
 
     def del_email(self):
+        '''
+        Sets the default value for the field('')
+        '''
         self.__email = ''
 
     def __str__(self):
