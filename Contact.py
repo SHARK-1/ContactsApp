@@ -30,6 +30,9 @@ class Contact:
         return self.__phone.number
 
     def set_phone(self, number):
+        '''
+        :param number: Length of number - 10
+        '''
         self.__phone.number = number
 
     def del_phone(self):
@@ -63,6 +66,9 @@ class Contact:
         return self.__date_of_birth
 
     def set_date_of_birth(self, date):
+        '''
+        :param date: Date format: int array [year,month,day]
+        '''
         date = datetime.date(date[0], date[1], date[2])
         if date < datetime.date(1900, 1, 1):
             raise ValueError('Date must be greater than 1900')

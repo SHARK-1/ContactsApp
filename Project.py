@@ -12,10 +12,10 @@ class Project:
     def add_contact(self, contact):
         '''
         Append contact into contact list
-        :param contact: Must be COntact class
+        :param contact: Must be Contact class
         '''
         if isinstance(contact, Contact):
-            self.__contacts.insert(0,contact)
+            self.__contacts.insert(0, contact)
             self.sort()
         else:
             raise ValueError('The contact variable must be an object of the Contact class')
