@@ -1,10 +1,12 @@
 import jsonpickle
-import os
+import os, getpass
 
 
 class ProjectManager:
+    __FILENAME = f'C:\\Users\\{getpass.getuser()}\\Documents\\ContactsApp.notes'
+
     @staticmethod
-    def save(value, file_name='Json.txt'):
+    def save(value, file_name=__FILENAME):
         if os.path.isfile(file_name):
             os.remove(file_name)
         file = open(file_name, mode='w', encoding='Latin-1')
@@ -12,7 +14,7 @@ class ProjectManager:
         file.write(JSONData)
 
     @staticmethod
-    def load(file_name='Json.txt'):
+    def load(file_name=__FILENAME):
         if os.path.isfile(file_name):
             file = open(file_name, mode='r')
             value = jsonpickle.decode(file.readline())

@@ -1,4 +1,5 @@
 import tkinter as tk
+from tkcalendar import DateEntry
 from Contact import Contact
 
 ERR_BG = 'red'
@@ -56,15 +57,17 @@ class AddEditWindow(tk.Toplevel):
             self.__string_vars[value] = tk.StringVar()
 
             if mode == 'add':
-                self.__entrys[value] = tk.Entry(frame, textvariable=self.__string_vars[value], bg=init_bg, width=57)
+                if value == 'Birthday:':
+                    self.__entrys[value] = DateEntry(frame, date_pattern='d/m/y', background=init_bg)
+                    self.__entrys[value].bind('<<DateEntrySelected>>', self.check_correct_date)
+                else:
+                    self.__entrys[value] = tk.Entry(frame, textvariable=self.__string_vars[value], bg=init_bg, width=57)
             else:
                 # ['Name:', 'Surname:', 'Birthday:', 'Phone:', 'E-Mail:', 'vk.com:']
                 if value == 'Name:':
                     self.__string_vars[value].set(self.__contact.first_name)
                 elif value == 'Surname:':
                     self.__string_vars[value].set(self.__contact.last_name)
-                elif value == 'Birthday:':
-                    self.__string_vars[value].set(self.__contact.date_of_birth)
                 elif value == 'Phone:':
                     self.__string_vars[value].set(self.__contact.phone)
                 elif value == 'E-Mail:':
@@ -72,7 +75,11 @@ class AddEditWindow(tk.Toplevel):
                 elif value == 'vk.com:':
                     self.__string_vars[value].set(self.__contact.social_network)
 
-                self.__entrys[value] = tk.Entry(frame, textvariable=self.__string_vars[value], bg=init_bg, width=57)
+                if value == 'Birthday:':
+                    self.__entrys[value] = DateEntry(frame,date_pattern='d/m/y', background=init_bg)
+                    self.__entrys[value].bind('<<DateEntrySelected>>', self.check_correct_date)
+                else:
+                    self.__entrys[value] = tk.Entry(frame, textvariable=self.__string_vars[value], bg=init_bg, width=57)
 
             self.__entrys[value].pack(side=tk.LEFT)
             self.__string_vars[value].trace("w", lambda a, b, c, x=value: self.check_correct_value(x))
@@ -81,6 +88,17 @@ class AddEditWindow(tk.Toplevel):
         self.ok_button.place(relx=0.6, rely=0.85, width=80)
         self.cancel_button = tk.Button(self, text='Cansel', command=self.destroy)
         self.cancel_button.place(relx=0.8, rely=0.85, width=80)
+
+    def check_correct_date(self, event):
+        widget = event.widget
+        date = widget.get_date()
+        date = str(date).split('-')
+        try:
+            self.__contact.date_of_birth = [int(date[0]), int(date[1]), int(date[2])]
+        except BaseException:
+            self.__entrys['Birthday:'].config(background=ERR_BG)
+        else:
+            self.__entrys['Birthday:'].config(background=CURRENT_BG)
 
     def check_correct_value(self, *args):
         if args[0] == 'Name:':

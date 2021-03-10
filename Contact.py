@@ -16,9 +16,6 @@ class Contact:
         self.__last_name = ''
         if last_name != '':
             self.set_last_name(last_name)
-        self.__age = 0
-        if age != 0:
-            self.set_age(age)
         self.__date_of_birth = datetime.date(1900, 1, 1)
         if date_of_birth != [1900, 1, 1]:
             self.set_date_of_birth(date_of_birth)
